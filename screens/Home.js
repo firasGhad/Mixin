@@ -49,7 +49,7 @@ export default class Home extends React.Component {
                 <ScrollView>
                         <View>
                             <View title='Welcome'>
-                                <Text style={styles.Welcome}>All Mixes</Text>
+                                <Text style={styles.header}>All Mixes</Text>
                             </View>
                             { !!this.state.mixes ? this.state.mixes.map((item, index) => 
                                <TouchableOpacity key={index} title={item.title} onPress={() =>this.onPressHandler(item.title)}>
@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 35,
         paddingVertical: 15,
     },
-    mainImage: {
-        width: 350,
-        height: 200,
-        marginTop: 30,
-        borderRadius: 20
+    header: {
+        borderColor: 'white',                                    
+        paddingHorizontal: 35,
+        paddingVertical: 15,
+        borderRadius: 50
     }
 });
 

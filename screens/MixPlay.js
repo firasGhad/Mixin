@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import { View, ScrollView,TouchableOpacity, Text, StyleSheet, Dimensions, Button } from 'react-native';
+import SoundPlayer from 'react-native-sound-player'
+
 import { NavigateTo } from '../constants/GeneralMethods';
 import {connect} from 'react-redux';
 import {saveScreen} from '../redux/actions/navigator';
@@ -14,14 +16,18 @@ class MixPlay extends Component{
     componentDidMount(){
         this.props.saveScreen('MixPlay');
         let title =  this.props.route.params && this.props.route.params.mix || ''
-        console.log(title)
         this.setState({title})     
         setTimeout(() => {
              (async () => {
-            let url = `https://www.mixesdb.com/db/api.php?action=query&prop=info&titles=${this.state.title}&inprop=url`;
+            let url = `https://www.mixesdb.com/db/api.php?action=query&prop=info&titles=${this.state.title}&inprop=url&format=json`;
             try{
                 let res = await fetch(url);
-               console.log(res);
+               let response = await res.json();
+               let key = Object.keys(response.query.pages)[0];
+               console.log(response.query.pages[key]['canonicalurl'])
+               let mixUrl= response.query.pages[key]['canonicalurl'] 
+               console.log(mixUrl) 
+             // !!mixUrl && SoundPlayer.playUrl(mixUrl)
             }catch(e){
                 console.log(e);
             }
@@ -32,10 +38,8 @@ class MixPlay extends Component{
    
     render(){
         return (
-            <View><Text>Mix</Text> 
-                  <Button title="Go back" onPress={() => NavigateTo(this.props.navigation, 'Home')} />
-
-                
+            <View><Text style={styles.listItem}> Mix: {this.state.title}</Text> 
+                  <Button title="Go back" onPress={() => NavigateTo(this.props.navigation, 'Home')} />    
             </View>
         );
     }
@@ -61,14 +65,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 35,
         paddingVertical: 15,
         borderRadius: 50
-    },
-    flatListContainer: {
-        marginTop: 20,
-        height: 320,
-        shadowColor: '#000',
-        shadowOpacity: 0.5,
-        shadowOffset: {width: 0.2, height: 0.2},
-        shadowRadius: 10, 
     }
 });
 
